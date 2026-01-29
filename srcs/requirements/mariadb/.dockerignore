@@ -1,0 +1,16 @@
+# Specify the base image that the build will extend
+FROM debian:13
+
+# Specify the "working directory" or the path in the image where files
+# will be copied and commands will be executed
+WORKDIR /home/lraggio/data
+
+# To install application dependencies
+COPY srcs/requirements/mariadb/requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy in the source code
+COPY srcs ./srcs
+EXPOSE 443
+
+CMD ["blabla1", "blabla2"]
