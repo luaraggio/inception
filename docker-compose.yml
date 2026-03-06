@@ -1,0 +1,54 @@
+networks:
+  inception_network:
+    driver: bridge
+services:
+  mariadb:
+    container_name:
+      mariadb
+    build:
+      srcs/requirements/mariadb
+    env_file:
+      - .env
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - ./secrets:/run/secrets
+    networks:
+      - inception_network
+    restart:
+     always
+  # nginx:
+  #   container_name:
+  #     nginx
+  #   build:
+  #     context: srcs/requirements/nginx
+  #     dockerfile: Dockerfile
+  #   # depends_on:
+  #   #   - wordpress
+  #   ports:
+  #     - 443:443
+  #   networks:
+  #     - inception_network
+    # volumes:
+    #   - ./web:var/www/html
+#   wordpress:
+#     container_name:
+#       wordpress
+#     build:
+#       context: srcs/requirements/wordpress
+#       dockerfile: Dockerfile
+#     networks:
+#       - inception_network
+      # volumes:
+      #   - ./web:var/www/html
+
+volumes:
+  mariadb_data: #nome do volume
+    driver: local #meu host
+    driver_opts:
+      type: none
+      o: bind #é pra bindar com o diretório do host, não pra criar um novo
+      device: /Users/lraggio/data/mariadb #conecta o volume chamado mariadb_data ao path
+  # wordpress_database:
+  #   # /home/lraggio/data
+  # wordpress_website_files:
+  #   # /home/lraggio/data
