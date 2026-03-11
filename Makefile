@@ -1,7 +1,7 @@
 DOCKER_COMPOSE= docker compose -f docker-compose.yml
 MARIADB_CONTAINER = mariadb
-#WP_CONTAINER = wordpress
-#NGINX_CONTAINER = nginx
+WP_CONTAINER = wordpress
+NGINX_CONTAINER = nginx
 
 all: up
 
@@ -17,8 +17,8 @@ build:
 clean:
 	$(DOCKER_COMPOSE) down -v
 
-fclean:
-	$(DOCKER_COMPOSE) down -v --rmi all
+fclean: clean
+		docker system prune -af --volumes
 
 re: fclean up
 
@@ -40,10 +40,22 @@ mariadb_service:
 mariadb_logs:
 	docker logs $(MARIADB_CONTAINER)
 
-# nginx:
-# 	docker exec -it $(NGINX_CONTAINER) bash
+wordpress_bash:
+	docker exec -it $(WP_CONTAINER) bash
 
-# wordpress:
-# 	docker exec -it $(WP_CONTAINER) bash
+wordpress_service:
+	$(DOCKER_COMPOSE) up $(WP_CONTAINER)
+
+wordpress_logs:
+	docker logs $(WP_CONTAINER)
+
+nginx_bash:
+	docker exec -it $(NGINX_CONTAINER) bash
+
+nginx_service:
+	 $(DOCKER_COMPOSE) up $(NGINX_CONTAINER)
+
+nginx_logs:
+	docker logs $(NGINX_CONTAINER)
 
 .PHONY: all up down build clean fclean re logs ps
