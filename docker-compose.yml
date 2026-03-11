@@ -3,10 +3,9 @@ networks:
     driver: bridge
 services:
   mariadb:
-    container_name:
-      mariadb
-    build:
-      srcs/requirements/mariadb
+    container_name: mariadb
+    build: srcs/requirements/mariadb
+    image: mariadb
     env_file:
       - .env
     volumes:
@@ -14,32 +13,38 @@ services:
       - ./secrets:/run/secrets
     networks:
       - inception_network
-    restart:
-     always
-  # nginx:
-  #   container_name:
-  #     nginx
-  #   build:
-  #     context: srcs/requirements/nginx
-  #     dockerfile: Dockerfile
-  #   # depends_on:
-  #   #   - wordpress
-  #   ports:
-  #     - 443:443
-  #   networks:
-  #     - inception_network
-    # volumes:
-    #   - ./web:var/www/html
-#   wordpress:
-#     container_name:
-#       wordpress
-#     build:
-#       context: srcs/requirements/wordpress
-#       dockerfile: Dockerfile
-#     networks:
-#       - inception_network
-      # volumes:
-      #   - ./web:var/www/html
+    restart: always
+  wordpress:
+    container_name: wordpress
+    build: srcs/requirements/wordpress
+    image: wordpress
+    env_file:
+      - .env
+    volumes:
+      - wordpress_data:/var/www/html
+      - ./secrets:/run/secrets
+    depends_on:
+      - mariadb
+    networks:
+      - inception_network
+    restart: always
+
+  nginx:
+    container_name: nginx
+    build: srcs/requirements/nginx
+    image: nginx
+    env_file:
+      - .env
+    volumes:
+      - wordpress_data:/var/www/html
+      - ./secrets:/run/secrets
+    depends_on:
+      - wordpress
+    ports:
+      - "443:443"
+    networks:
+      - inception_network
+    restart: always
 
 volumes:
   mariadb_data: #nome do volume
@@ -48,7 +53,9 @@ volumes:
       type: none
       o: bind #é pra bindar com o diretório do host, não pra criar um novo
       device: /Users/lraggio/data/mariadb #conecta o volume chamado mariadb_data ao path
-  # wordpress_database:
-  #   # /home/lraggio/data
-  # wordpress_website_files:
-  #   # /home/lraggio/data
+  wordpress_data:
+    driver: local
+    driver_opts:
+        type: none
+        o: bind
+        device: /Users/lraggio/data/wordpress
