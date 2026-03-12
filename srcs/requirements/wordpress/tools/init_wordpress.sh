@@ -76,16 +76,31 @@ if [ ! -f wp-config.php ]; then
 fi
 
 # ------------------------------------------------------------
-# Create an additional WordPress user if it does not exist
+# Create admin user if missing
+# ------------------------------------------------------------
+if ! wp user get "$WP_ADMIN_USER" --allow-root >/dev/null 2>&1; then
+    echo "[INIT] Creating admin user..."
+    wp user create "$WP_ADMIN_USER" "$WP_ADMIN_EMAIL" \
+        --role=administrator \
+        --user_pass="$WP_ADMIN_PASSWORD" \
+        --allow-root
+else
+    # Always update admin password
+    wp user update "$WP_ADMIN_USER" --user_pass="$WP_ADMIN_PASSWORD" --allow-root
+fi
+
+# ------------------------------------------------------------
+# Create additional WordPress user if missing
 # ------------------------------------------------------------
 if ! wp user get "$WP_USER" --allow-root >/dev/null 2>&1; then
     echo "[INIT] Creating additional WordPress user..."
-    wp user create \
-        "$WP_USER" \
-        "$WP_USER_EMAIL" \
-        --user_pass="$WP_USER_PASSWORD" \
+    wp user create "$WP_USER" "$WP_USER_EMAIL" \
         --role=author \
+        --user_pass="$WP_USER_PASSWORD" \
         --allow-root
+else
+    # Always update user password
+    wp user update "$WP_USER" --user_pass="$WP_USER_PASSWORD" --allow-root
 fi
 
 # ------------------------------------------------------------
