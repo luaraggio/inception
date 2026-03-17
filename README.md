@@ -38,7 +38,7 @@ The project includes:
 1. Clone the repository:
 
 ```bash
-git clone <your_repo_url>
+git clone <repo_url>
 cd inception
 ```
 
