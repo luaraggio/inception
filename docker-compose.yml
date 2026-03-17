@@ -52,10 +52,10 @@ volumes:
     driver_opts:
       type: none
       o: bind #é pra bindar com o diretório do host, não pra criar um novo
-      device: /Users/lraggio/data/mariadb #conecta o volume chamado mariadb_data ao path
+      device: /home/lraggio/data/mariadb #conecta o volume chamado mariadb_data ao path
   wordpress_data:
     driver: local
     driver_opts:
         type: none
         o: bind
-        device: /Users/lraggio/data/wordpress
+        device: /home/lraggio/data/wordpress
