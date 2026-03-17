@@ -24,6 +24,10 @@ services:
     build: srcs/requirements/wordpress
     image: wordpress
     environment:
+      - DOMAIN_NAME={DOMAIN_NAME}
+      - MYSQL_DATABASE={MYSQL_DATABASE}
+      - MYSQL_USER={MYSQL_USER}
+      - MYSQL_HOST={MYSQL_HOST}
       - WP_ADMIN_USER={WP_ADMIN_USER}
       - WP_ADMIN_EMAIL={WP_ADMIN_EMAIL}
       - WP_USER={WP_USER}
