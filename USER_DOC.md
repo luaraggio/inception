@@ -1,54 +1,71 @@
-<!-- User documentation This file must explain, in clear and simple
-terms, how an end user or administrator can:
-◦ Understand what services are provided by the stack.
-◦ Start and stop the project.
-◦ Access the website and the administration panel.
-◦ Locate and manage credentials.
-◦ Check that the services are running correctly. -->
+# Inception - User Documentation
 
-<!-- The very first line must be italicized and read: This project has been created as part
-of the 42 curriculum by lraggio -->
+## Overview of Services
 
-# Inception
+The Inception stack provides the following services:
 
-## Description
+- **MariaDB**: A relational database container that stores all WordPress data securely.
+- **WordPress**: The CMS running your website, connected to the MariaDB database.
+- **Nginx**: A reverse proxy that serves WordPress over HTTPS and handles client requests.
 
-Inception - a infrastructure composed of 3 different
-services - MariaDB, Nginx and Wordpress - using docker compose. The environment was created in a Linux (Debian) virtual machine.
+All services are connected via an **internal Docker network** for security and isolation.
 
-<!-- A “Description” section that clearly presents the project, including its goal and a
-brief overview.
+---
 
-## Instructions
+## Starting and Stopping the Project
 
--- clonar
+### Start the Stack
 
--- se certificar de que .env e secrets estão devidamente configurados
+From the root of the project, run:
 
--- instalar docker -> se não instalado
+```bash
+docker-compose up -d
+```
+This will:
+Build the images if needed.
+Launch all containers in detached mode.
 
--- make
+### Stop the Stack
 
--- ver containers rodando
+To stop and remove the containers:
 
--- testar stop nos containers
+```bash
+docker-compose down
+```
+Persistent data in volumes and bind mounts will remain intact.
 
--- testar start nos containers
+### Accessing the Website and Administration Panel
 
--- 
+Open a web browser and navigate to:
+```
+https://<your_domain>
+```
+This is your WordPress website.
 
-• An “Instructions” section containing any relevant information about compilation,
-installation, and/or execution.
+Access the WordPress admin panel at:
 
-## Resources
+```https://<your_domain>/wp-admin```
 
-• A “Resources” section listing classic references related to the topic (documen-
-tation, articles, tutorials, etc.), as well as a description of how AI was used —
-specifying for which tasks and which parts of the project.
+Login using the credentials defined in the secrets:
 
-## Feature list
+WordPress admin password: stored in wp_admin_password secret.
+WordPress user password: stored in wp_user_password secret.
 
-## AI
+## Locating and Managing Credentials
 
-➠ Additional sections may be required depending on the project (e.g., usage
-examples, feature list, technical choices, etc.). -->
+All sensitive passwords are stored in Docker secrets:
+
+- MariaDB root password: db_root_password
+- MariaDB user password: db_password
+- WordPress admin password: wp_admin_password
+- WordPress user password: wp_user_password
+
+Secrets are mounted inside containers at:
+```
+/run/secrets/<secret_name>
+```
+To check a secret inside a container:
+
+```bash
+docker exec -it <container_name> cat /run/secrets/db_root_password
+```
