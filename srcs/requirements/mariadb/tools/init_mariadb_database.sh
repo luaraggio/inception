@@ -34,6 +34,7 @@ CREATE USER IF NOT EXISTS '${DB_USER}'@'%' IDENTIFIED BY '${DB_USER_PASSWORD}';
 GRANT ALL PRIVILEGES ON \`${DB_NAME}\`.* TO '${DB_USER}'@'%';
 FLUSH PRIVILEGES;
 EOSQL
+echo "Saiu de init"
 
 # Stop temporary server
 echo "[INIT] Shutting down temporary MariaDB server..."
