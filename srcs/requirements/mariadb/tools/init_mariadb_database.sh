@@ -4,8 +4,8 @@ set -e
 # ------------------------------------------------------------
 # Read secrets from files
 # ------------------------------------------------------------
-DB_ROOT_PASSWORD=$(cat /run/secrets/db_root_password.txt)
-DB_USER_PASSWORD=$(cat /run/secrets/db_password.txt)
+DB_ROOT_PASSWORD=$(cat /run/secrets/db_root_password)
+DB_USER_PASSWORD=$(cat /run/secrets/db_password)
 
 # ------------------------------------------------------------
 # Non-sensitive variables from .env

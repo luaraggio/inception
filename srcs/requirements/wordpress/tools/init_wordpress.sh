@@ -9,9 +9,9 @@ cd /var/www/html
 # ------------------------------------------------------------
 # Read secrets from Docker secret files
 # ------------------------------------------------------------
-DB_PASSWORD=$(cat /run/secrets/db_password.txt)
-WP_ADMIN_PASSWORD=$(cat /run/secrets/wp_admin_password.txt)
-WP_USER_PASSWORD=$(cat /run/secrets/wp_user_password.txt)
+DB_PASSWORD=$(cat /run/secrets/db_password)
+WP_ADMIN_PASSWORD=$(cat /run/secrets/wp_admin_password)
+WP_USER_PASSWORD=$(cat /run/secrets/wp_user_password)
 
 # ------------------------------------------------------------
 # Non-sensitive variables from .env

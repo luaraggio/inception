@@ -7,8 +7,9 @@ services:
     build: srcs/requirements/mariadb
     image: mariadb
     environment:
-      - DB_ROOT_PASSWORD: /run/secrets/db_root_password
-      - DB_PASSWORD: /run/secrets/db_password
+      - MYSQL_DATABASE={MYSQL_DATABASE}
+      - MYSQL_USER={MYSQL_USER}
+      - MYSQL_HOST={MYSQL_HOST}
     secrets:
       - db_password
       - db_root_password
@@ -22,12 +23,11 @@ services:
     container_name: wordpress
     build: srcs/requirements/wordpress
     image: wordpress
-    env_file:
-      - .env
-    # environment:
-    #   DB_PASSWORD: /run/secrets/db_password.txt
-    #   WP_ADMIN_PASSWORD: /run/secrets/wp_admin_password.txt
-    #   WP_USER_PASSWORD: /run/secrets/wp_user_password.txt
+    environment:
+      - WP_ADMIN_USER={WP_ADMIN_USER}
+      - WP_ADMIN_EMAIL={WP_ADMIN_EMAIL}
+      - WP_USER={WP_USER}
+      - WP_USER_EMAIL={WP_USER_EMAIL}
     secrets:
       - db_password
       - wp_admin_password
@@ -44,10 +44,8 @@ services:
     container_name: nginx
     build: srcs/requirements/nginx
     image: nginx
-    env_file:
-      - .env
-    # environment:
-    #   DOMAIN_NAME
+    environment:
+      - DOMAIN_NAME={DOMAIN_NAME}
     volumes:
       - wordpress_data:/var/www/html
     depends_on:
@@ -60,13 +58,13 @@ services:
 
 secrets:
   db_password:
-    file: secrets/db_password.txt
+    file: ../secrets/db_password.txt
   db_root_password:
-    file: secrets/db_root_password.txt
+    file: ../secrets/db_root_password.txt
   wp_admin_password:
-    file: secrets/wp_admin_password.txt
+    file: ../secrets/wp_admin_password.txt
   wp_user_password:
-    file: secrets/wp_user_password.txt
+    file: ../secrets/wp_user_password.txt
 
 
 volumes:
