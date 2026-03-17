@@ -6,23 +6,34 @@ services:
     container_name: mariadb
     build: srcs/requirements/mariadb
     image: mariadb
-    env_file:
-      - .env
+    environment:
+      - DB_ROOT_PASSWORD: /run/secrets/db_root_password
+      - DB_PASSWORD: /run/secrets/db_password
+    secrets:
+      - db_password
+      - db_root_password
     volumes:
       - mariadb_data:/var/lib/mysql
-      - ./secrets:/run/secrets
     networks:
       - inception_network
     restart: always
+
   wordpress:
     container_name: wordpress
     build: srcs/requirements/wordpress
     image: wordpress
     env_file:
       - .env
+    # environment:
+    #   DB_PASSWORD: /run/secrets/db_password.txt
+    #   WP_ADMIN_PASSWORD: /run/secrets/wp_admin_password.txt
+    #   WP_USER_PASSWORD: /run/secrets/wp_user_password.txt
+    secrets:
+      - db_password
+      - wp_admin_password
+      - wp_user_password
     volumes:
       - wordpress_data:/var/www/html
-      - ./secrets:/run/secrets
     depends_on:
       - mariadb
     networks:
@@ -35,9 +46,10 @@ services:
     image: nginx
     env_file:
       - .env
+    # environment:
+    #   DOMAIN_NAME
     volumes:
       - wordpress_data:/var/www/html
-      - ./secrets:/run/secrets
     depends_on:
       - wordpress
     ports:
@@ -46,6 +58,17 @@ services:
       - inception_network
     restart: always
 
+secrets:
+  db_password:
+    file: secrets/db_password.txt
+  db_root_password:
+    file: secrets/db_root_password.txt
+  wp_admin_password:
+    file: secrets/wp_admin_password.txt
+  wp_user_password:
+    file: secrets/wp_user_password.txt
+
+
 volumes:
   mariadb_data: #nome do volume
     driver: local #meu host
@@ -53,6 +76,7 @@ volumes:
       type: none
       o: bind #é pra bindar com o diretório do host, não pra criar um novo
       device: /home/lraggio/data/mariadb #conecta o volume chamado mariadb_data ao path
+
   wordpress_data:
     driver: local
     driver_opts:

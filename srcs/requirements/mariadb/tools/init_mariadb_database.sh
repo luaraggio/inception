@@ -2,7 +2,7 @@
 set -e
 
 # ------------------------------------------------------------
-# Read secrets from files (Docker secrets simulation)
+# Read secrets from files
 # ------------------------------------------------------------
 DB_ROOT_PASSWORD=$(cat /run/secrets/db_root_password.txt)
 DB_USER_PASSWORD=$(cat /run/secrets/db_password.txt)
